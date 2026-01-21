@@ -19,20 +19,16 @@ photos = {
     6: "sunday.jpg"
 }
 
-today = datetime.now().weekday()
-path = os.path.join("photos", photos[today])
-
-
 async def main():
     today = datetime.now().weekday()
-    file_path = os.path.join("photos", photos[today])
+    path = os.path.join("photos", photos[today])
 
     async with telethon.TelegramClient("session", apiId, apiHash) as client:
         current = await client.get_profile_photos("me", limit=1)
         if current:
             await client(DeletePhotosRequest(current))
 
-        uploaded = await client.upload_file(file_path)
+        uploaded = await client.upload_file(path)
         await client(UploadProfilePhotoRequest(file=uploaded))
 
 asyncio.run(main())
